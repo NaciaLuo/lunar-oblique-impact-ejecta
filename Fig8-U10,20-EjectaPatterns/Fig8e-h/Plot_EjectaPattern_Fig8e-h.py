@@ -9,24 +9,24 @@ Plot a group of ejecta patterns
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-import cmcrameri.cm as cmc
 import matplotlib.colors as cls
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-I = 15
-V = 10
-degs = [20,30,45,60] # impact angle
+# Ejecta thickness contour level and colors
+levels = [3e-5,1e-4,3e-4,1e-3,3e-3,1e-2]
+colors = ['#4576b6', '#91bfdc', '#e1f3fa', '#fce091', '#f68d5c']
 
-pltlim = 15 # plot limit of the axes, smaller impactor needs a larger pltR
+subfolder = 'Fig8e-h'
+I = 15 # impactor diameter
+V = 20 # impact velocity
+degs = [20, 30, 45, 60] # impact angle
+
+# Set up canvas
+pltlim = 20
 plt.rcParams['font.size'] = '12'
-#cmap = cmc.batlowW_r
-colors = ['#4576b6', '#91bfdc', '#e1f3fa', '#fce091', '#f68d5c', '#d93127']
-levels = [3e-5,1e-4,3e-4,1e-3,3e-3,1e-2,3e-2]
-#norm = cls.LogNorm(vmin=min(levels), vmax=max(levels))
-
 cm = 1./2.54
-ncols=len(degs)
-fig, axes = plt.subplots(ncols=ncols, figsize=[21.*cm,10*cm], constrained_layout=True)
+ncols = len(degs)
+fig, axes = plt.subplots(ncols = ncols, figsize = [21.*cm, 10*cm])
 for i, ax in enumerate(axes):
     if i != 0:
         ax.yaxis.set_ticklabels([])
@@ -40,10 +40,11 @@ for i, ax in enumerate(axes):
             length = 3,
             top = True, right = True,
             direction = 'in',
-            labelsize=11)
+            labelsize='10')
     ax.grid(linestyle='--',linewidth=0.5)
 
-text = axes[0].text(-0.45,0.5,'d = {} km'.format(I),
+# Annotate the impactor diameter
+text = axes[0].text(-0.45,0.5,'U = {} km/s'.format(V),
                     transform = axes[0].transAxes,
                     fontsize = '12',
                     fontweight='bold',
@@ -53,25 +54,34 @@ text = axes[0].text(-0.45,0.5,'d = {} km'.format(I),
 plt.subplots_adjust(top=None,left=None,right=None,
                     wspace=0.)
 
-
+# Plot the ejecta pattern of each model case
 for k,deg in enumerate(degs):
+    ax = axes[k]
     modelname = 'I{}_deg{}_V{}'.format(I, deg, V)
+    print(modelname)
 
+    # Load the ejecta thickness grid
     Te = np.loadtxt('./'+modelname+'/Te_grid.txt')
     gridx = np.loadtxt('./'+modelname+'/gridx.txt')
     gridy = np.loadtxt('./'+modelname+'/gridy.txt')
-    crater = np.loadtxt('./'+modelname+'/transient_outline.txt')
-    R = ((abs(crater[:, 0].min()) + crater[:, 0].max()) / 2 + crater[:, 1].max()) / 2
-    center = [(crater[:, 0].min() + crater[:, 0].max()) / 2]
     plotx, ploty = np.meshgrid(gridx, gridy)
-    scale = R
 
-    ax = axes[k]
+    # Load the transient crater outline
+    crater = np.loadtxt('./'+modelname+'/transient_outline.txt')
+
+    # Calculate the crater radius
+    R = ((abs(crater[:, 0].min()) + crater[:, 0].max()) / 2 + crater[:, 1].max()) / 2  # average alongrange and crossrange radius
+    # Calculate the x-coordinate of the crater center
+    center = [(crater[:, 0].min() + crater[:, 0].max()) / 2]
+
+    # Set the axis and ejecta thickness normalization scale to the crater radius
+    scale = R
     ax.set_xlabel('R = {}'.format(int(round(R / 1000))),fontsize=11)
 
-    # Plot the ejecta thickness contourf
-    im = ax.contourf((plotx - center) / scale, ploty / scale, Te / scale,
+    # Plot the ejecta thickness filled contours
+    ax.contourf((plotx - center) / scale, ploty / scale, Te / scale,
                      colors=colors, levels=levels)
+    # Mirror in the y direction
     ax.contourf((plotx - center) / scale, -ploty / scale, Te / scale,
                 colors=colors, levels=levels)
 
@@ -85,9 +95,22 @@ for k,deg in enumerate(degs):
                  fontsize='12',
                  fontweight='bold')
 
-# cbar=fig.colorbar(im,ax=axes[:],shrink=0.5,pad=0.2,location='bottom')
-# cbar.ax.set_xticklabels(['3e-5','1e-4','3e-4','1e-3','3e-3','1e-2','3e-2'])
-# cbar.ax.tick_params(labelsize='small')
-# cbar.set_label('Thickness/R')
+fig.savefig('./{}.pdf'.format(subfolder), dpi=300, bbox_inches='tight')
 
-# fig.savefig('d{}_pattern_{}.pdf'.format(I,ncols),dpi=300,bbox_inches='tight')
+# Colorbar
+fig2, ax2 = plt.subplots(figsize=(12*cm, 1*cm))
+fig2.subplots_adjust(bottom=0.5)
+ax2.tick_params(axis = 'x',
+                direction = 'in', length = 3,
+                top = True, labelbottom = True,labeltop = False,
+                labelsize='11')
+ax2.set_yticks([])
+ax2.set_xlim(0, len(colors))
+for i in range(len(colors)):
+   ax2.axvspan(i, i+1,
+               color=colors[i])
+
+ax2.set_xticks(range(len(colors)+1))
+ax2.set_xticklabels(levels)
+ax2.set_title('Thickness/R', pad=10, fontsize='12')
+fig2.savefig('./Te_cb.pdf', bbox_inches='tight', dpi=300)
