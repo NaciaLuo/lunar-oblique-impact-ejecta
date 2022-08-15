@@ -1,0 +1,2 @@
+Impactor diameter [km] Impact angle [degree]  Impact velocity [km/s] Tracer size [m]        
+6                     45                     15                     200                    
