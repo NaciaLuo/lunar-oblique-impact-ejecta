@@ -16,6 +16,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 levels = [3e-5,1e-4,3e-4,1e-3,3e-3,1e-2,3e-2]
 colors = ['#4576b6', '#91bfdc', '#e1f3fa', '#fce091', '#f68d5c', '#d93127']
 
+subfolder = 'Fig7f-j'
 I = 120 # impactor diameter
 V = 15 # impact velocity
 degs = [20, 30, 45, 60, 70] # impact angle
@@ -94,7 +95,7 @@ for k,deg in enumerate(degs):
                  fontsize='12',
                  fontweight='bold')
 
-fig.savefig('./d{}_pattern_{}.pdf'.format(I, ncols), dpi=300, bbox_inches='tight')
+fig.savefig('./{}.pdf'.format(subfolder), dpi=300, bbox_inches='tight')
 
 # Colorbar
 fig2, ax2 = plt.subplots(figsize=(12*cm, 1*cm))
