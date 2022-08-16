@@ -13,4 +13,4 @@ Each subfolder constains ejecta launch angle distribution with respect to azimut
 Each subfolder contains ejecta deposit pattern for one groups of model cases. In each folder I(impactor diameter)\_deg(impact angle)\_V(impact velocity), ***Te_grid.txt*** is the ejecta thickness grid, ***gridx.txt*** and ***gridy.txt*** are the coordinates of the grid corners, and ***transient_outline.txt*** contains cooridinates of the transient crater outline. The Python script Plot_EjectaPattern_(subfolder name).py creates subfigures of Figures 6, 7 and 8 in the paper.
 
 ## Folder "iSALE input files"
-Contains an example parameter input file (I1_deg45_V15.inp) and the material input file (material.inp) for iSALE-3D simulations. 
+Contains an example parameter input file (I1_deg45_V15.inp) and the material input file (material.inp) for iSALE3D simulations. 
