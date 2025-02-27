@@ -1,7 +1,7 @@
 # Dataset of "Ejecta pattern of oblique impacts on the Moon from numerical simulations"
 This repository includes ejecta launch velocities, launch angles, and ejecta deposit patterns from iSALE-3D simulations. Please note the iSALE-3D code is distributed on a case-by-case basis in the impact community, restricted to non-commercial use. 
 
-Source data for producing Figures 4-8 in the paper are stored in folders that use the name convention I(impactor diameter)\_deg(impact angle)\_V(impact velocity), where the units are km, degree, and km/s. 
+Source data for producing Figures 4-8 in the paper "Ejecta Pattern of Oblique Impacts on the Moon From Numerical Simulations" (https://doi.org/10.1029/2022JE007333) are stored in folders that use the name convention I(impactor diameter)\_deg(impact angle)\_V(impact velocity), where the units are km, degree, and km/s. 
 
 ## Folder "Fig4-Ejecta launch velocity"
 Each subfolder contains ejecta launch velocity distribution with respect to azimuth for one group of model cases. In each folder I(impactor diameter)\_deg(impact angle)\_V(impact velocity), files ***v.txt*** and ***phi.txt*** are the ejecta launch velocity and azimuthal angle. The Python script Plot\_V-phi\_(subfolder name).py creates subfigures of Figure 4 in the paper.
